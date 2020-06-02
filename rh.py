@@ -1,36 +1,37 @@
+import heapq
 import pyrh
-import time
 import sys
+import time
 
 input_args = sys.argv
 
 rh = pyrh.Robinhood(username=input_args[1], password=input_args[2])
 rh.login()
 
-stack = []
+heap = []
 stock = input_args[3]
-batch_size = input_args[4]
+batch_size = int(input_args[4])
 
 while True:
 	stock_data = rh.quote_data(stock)
 	price = float(stock_data["ask_price"])
 	print(price)
-	if len(stack) == 0 or stack[-1] - price > 0.5:
+	if len(heap) == 0 or heap[0] - price > 0.5:
 		# rh.buy
 		# buy_data = rh.place_market_buy_order(instrument_URL=stock_data["instrument"],
 		#                                      symbol=stock,
 		#                                      time_in_force="GFD",
 		#                                      quantity=batch_size)
 		# print(buy_data)
-		stack.append(price)
-	elif price - stack[-1] > 0.5:
+		heapq.heappush(heap, price)
+	elif price - heap[0] > 0.5:
 		# rh.sell
 		# sell_data = rh.place_market_sell_order(instrument_URL=stock_data["instrument"],
 		#                                        symbol=stock,
 		#                                        time_in_force="GFD",
 		#                                        quantity=batch_size)
 		# print(sell_data)
-		print("Earned: " + str((price - stack[-1]) * batch_size))
-		stack.pop()
-	print(stack)
+		print("Earned: " + str((price - heap[0]) * batch_size))
+		heapq.heappop(heap)
+	print(heap)
 	time.sleep(30)
