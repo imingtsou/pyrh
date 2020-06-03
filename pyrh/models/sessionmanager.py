@@ -50,7 +50,7 @@ HEADERS: CaseInsensitiveDictType = CaseInsensitiveDict(
 EXPIRATION_TIME: int = 734000
 """Default expiration time for requests."""
 
-TIMEOUT: int = 1
+TIMEOUT: int = 5
 """Default timeout in seconds"""
 
 
